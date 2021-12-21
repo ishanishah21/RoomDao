@@ -4,13 +4,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.ishani.roomdemo.databinding.ActivityMainBinding
 import com.ishani.roomdemo.db.SubscriberDAO
 import com.ishani.roomdemo.db.SubscriberDataBase
 import com.ishani.roomdemo.db.SubscriberRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -29,11 +31,20 @@ class MainActivity : AppCompatActivity() {
         displaySubscriberList()
     }
 
-    private fun displaySubscriberList(){
-        viewModel.viewModelScope.launch {
+    private fun displaySubscriberList() {
+        lifecycleScope.launch {
+            viewModel.subscribers.flowWithLifecycle(lifecycle).asLiveData().observe(this@MainActivity, Observer {
+                Log.i("MyTag", it.toString())
+            })
+        }
+      /*  viewModel.subscribers.asLiveData().observe(this, Observer {
+            Log.i("MyTag", it.toString())
+        })*/
+
+       /* viewModel.viewModelScope.launch(Dispatchers.Main) {
             viewModel.subscribers.collect {
                 Log.i("MyTag", it.toString())
             }
-        }
+        }*/
     }
 }
