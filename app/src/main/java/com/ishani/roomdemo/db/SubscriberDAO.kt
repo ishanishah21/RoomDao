@@ -1,11 +1,11 @@
 package com.ishani.roomdemo.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SubscriberDAO {
+
     @Insert
     suspend fun insertSubscriber(subscriber: Subscriber): Long
 
